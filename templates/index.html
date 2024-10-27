@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challan Alerter</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1 class="h1">🌟CHALLAN ALERTER🌟</h1>
+    </header>
+
+    <div class="container">
+        <div class="division division-1">
+            <input type="email" id="email" placeholder="Enter Receiver's Email">
+            <input type="number" id="fine" placeholder="Enter Min Fine Amount">
+        </div>
+        <div class="division division-2">
+            <img src="{{ url_for('static', filename='images/start.png') }}" class="btn" id="start-btn" alt="Start Button">
+            <img src="{{ url_for('static', filename='images/stop.png') }}" class="btn" id="stop-btn" alt="Stop Button">
+        </div>
+        <div class="division division-3">
+            <div id="message-box"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+const startBtn = document.getElementById('start-btn');
+const stopBtn = document.getElementById('stop-btn');
+const messageBox = document.getElementById('message-box');
+const emailInput = document.getElementById('email');
+const fineInput = document.getElementById('fine');
+let lastLogLength = 0;
+let isRunning = false;
+
+startBtn.addEventListener('click', () => {
+    if (!isRunning) {
+        const email = emailInput.value;
+        const fineAmount = fineInput.value;
+        if (email && fineAmount) {
+            emailInput.disabled = true;
+            fineInput.disabled = true;
+            fetch('/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, fineAmount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "started") {
+                    appendMessage("Starting...");
+                    isRunning = true;
+                } else if (data.status === "already running") {
+                    appendMessage("Already running.");
+                }
+            });
+        } else {
+            alert("Please enter both email and fine amount.");
+        }
+    }
+});
+
+stopBtn.addEventListener('click', () => {
+    if (isRunning) {
+        fetch('/stop', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "stopped") {
+                appendMessage("Stopped.");
+                emailInput.disabled = false;
+                fineInput.disabled = false;
+                isRunning = false;
+            } else if (data.status === "not running") {
+                appendMessage("Not running.");
+            }
+        });
+    }
+});
+
+function appendMessage(message) {
+    const p = document.createElement('p');
+    p.textContent = message;
+    messageBox.appendChild(p);
+}
+
+function fetchMessages() {
+    if (isRunning) {
+        fetch('/logs')
+        .then(response => response.json())
+        .then(data => {
+            const newLogs = data.logs.slice(lastLogLength);
+            newLogs.forEach(log => {
+                appendMessage(log);
+            });
+            lastLogLength = data.logs.length;
+        });
+    }
+}
+
+setInterval(fetchMessages, 1000); // Fetch messages every second
+
+    </script>
+</body>
+</html>

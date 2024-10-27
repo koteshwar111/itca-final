@@ -1,0 +1,89 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    font-size: 2.5em;
+    font-weight: bolder;
+    background-image: url("../images/bg1.jpeg");
+    background-position: center;
+    background-color: #117fece8;
+    padding: 20px;
+    text-align: center;
+}
+
+.h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
+
+.division {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.division-1 {
+    background-color: #e3f2fd;
+    flex-direction: column;
+}
+
+.division-2 {
+    background-color: #fce4ec;
+    flex-direction: column;
+}
+
+.division-3 {
+    background-color: #e8f5e9;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.division-2 .btn {
+    margin-bottom: 20px;
+    width: 50%; /* Adjust the width as needed */
+    max-width: 200px; /* Limit the maximum width */
+    cursor: pointer;
+}
+
+.division-2 .btn:hover {
+    opacity: 0.8;
+}
+
+#message-box {
+    width: 90%;
+    height: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="email"], input[type="number"] {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+    box-sizing: border-box;
+}
